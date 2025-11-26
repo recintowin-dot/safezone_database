@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: safe-zone-database
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: safe-zone-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11"
+
+databases:
+  - name: safe-zone-db
+    databaseName: safe_zone_db
+    region: oregon
+    plan: free
