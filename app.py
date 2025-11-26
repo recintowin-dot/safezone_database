@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -55,6 +55,12 @@ def health_check():
 
 
 # ==================== PLACE ENDPOINTS ====================
+
+
+# Serve the single-page HTML UI
+@app.route('/', methods=["GET"])
+def index():
+    return render_template('index.html')
 
 @app.route('/api/places', methods=['POST'])
 def create_place():
