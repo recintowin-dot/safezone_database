@@ -10,7 +10,7 @@ load_dotenv()
 # Database
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://user:password@localhost/safe_zone_db"
+    "postgresql+asyncpg://user:password@localhost/safe_zone_db"
 )
 
 # Security
