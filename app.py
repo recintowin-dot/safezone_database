@@ -11,29 +11,20 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Database configuration - PostgreSQL REQUIRED
-database_url = os.getenv('DATABASE_URL')
+# Database configuration: prefer DATABASE_URL if set, otherwise use local SQLite file
+database_url = os.getenv('DATABASE_URL') or 'sqlite:///./safe_zone.db'
 
-if not database_url:
-    raise ValueError(
-        "ERROR: DATABASE_URL environment variable is not set. "
-        "This application requires PostgreSQL. "
-        "Please set DATABASE_URL to a valid PostgreSQL connection string (postgresql://...)"
-    )
-
-print(f"[DEBUG] Original DATABASE_URL: {database_url[:50]}..." if len(database_url) > 50 else f"[DEBUG] Original DATABASE_URL: {database_url}")
+print(f"[DEBUG] Using DATABASE_URL: {database_url[:60]}..." if len(database_url) > 60 else f"[DEBUG] Using DATABASE_URL: {database_url}")
 
 # Fix PostgreSQL URL format if needed (Render sometimes uses postgres:// instead of postgresql://)
 if database_url.startswith('postgres://'):
     database_url = database_url.replace('postgres://', 'postgresql://', 1)
     print("[DEBUG] Converted postgres:// to postgresql://")
 
-# Ensure psycopg2 dialect is used (remove +asyncpg if present from old configs)
+# Remove asyncpg suffix if present
 if '+asyncpg' in database_url:
     database_url = database_url.replace('+asyncpg', '')
-    print("[DEBUG] Removed +asyncpg dialect")
-
-print(f"[DEBUG] Final DATABASE_URL: {database_url[:50]}..." if len(database_url) > 50 else f"[DEBUG] Final DATABASE_URL: {database_url}")
+    print("[DEBUG] Removed +asyncpg suffix from DATABASE_URL")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -72,6 +63,38 @@ class Place(db.Model):
 # Create tables
 with app.app_context():
     db.create_all()
+    # Seed the database with hard-coded places if empty
+    if Place.query.count() == 0:
+        seed_places = [
+            {
+                'name': 'Central Park',
+                'latitude': 40.785091,
+                'longitude': -73.968285,
+                'address': 'New York, NY'
+            },
+            {
+                'name': 'Eiffel Tower',
+                'latitude': 48.858370,
+                'longitude': 2.294481,
+                'address': 'Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France'
+            },
+            {
+                'name': 'Sydney Opera House',
+                'latitude': -33.856784,
+                'longitude': 151.215297,
+                'address': 'Bennelong Point, Sydney NSW 2000, Australia'
+            }
+        ]
+
+        for p in seed_places:
+            place = Place(
+                name=p['name'],
+                latitude=p['latitude'],
+                longitude=p['longitude'],
+                address=p['address']
+            )
+            db.session.add(place)
+        db.session.commit()
 
 
 # Health check endpoint
