@@ -11,8 +11,15 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Database configuration
-database_url = os.getenv('DATABASE_URL', 'sqlite:///safe_zone.db')
+# Database configuration - PostgreSQL REQUIRED
+database_url = os.getenv('DATABASE_URL')
+
+if not database_url:
+    raise ValueError(
+        "ERROR: DATABASE_URL environment variable is not set. "
+        "This application requires PostgreSQL. "
+        "Please set DATABASE_URL to a valid PostgreSQL connection string (postgresql://...)"
+    )
 
 # Fix PostgreSQL URL format if needed (Render sometimes uses postgres:// instead of postgresql://)
 if database_url.startswith('postgres://'):
