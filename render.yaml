@@ -7,17 +7,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: safe-zone-db
-          property: connectionString
       - key: DEBUG
         value: "False"
       - key: PYTHON_VERSION
         value: "3.11"
-
-databases:
-  - name: safe-zone-db
-    databaseName: safe_zone_db
-    region: oregon
-    plan: free

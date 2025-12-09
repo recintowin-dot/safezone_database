@@ -16,16 +16,7 @@ database_url = os.getenv('DATABASE_URL') or 'sqlite:///./safe_zone.db'
 
 print(f"[DEBUG] Using DATABASE_URL: {database_url[:60]}..." if len(database_url) > 60 else f"[DEBUG] Using DATABASE_URL: {database_url}")
 
-# Fix PostgreSQL URL format if needed (Render sometimes uses postgres:// instead of postgresql://)
-if database_url.startswith('postgres://'):
-    database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    print("[DEBUG] Converted postgres:// to postgresql://")
-
-# Remove asyncpg suffix if present
-if '+asyncpg' in database_url:
-    database_url = database_url.replace('+asyncpg', '')
-    print("[DEBUG] Removed +asyncpg suffix from DATABASE_URL")
-
+# Using SQLite by default; if you set DATABASE_URL it should be a sqlite URI when PostgreSQL is removed.
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
