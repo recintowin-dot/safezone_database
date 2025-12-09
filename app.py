@@ -58,22 +58,40 @@ with app.app_context():
     if Place.query.count() == 0:
         seed_places = [
             {
-                'name': 'Central Park',
-                'latitude': 40.785091,
-                'longitude': -73.968285,
-                'address': 'New York, NY'
+                'name': 'BSU Alangilan Safe Zone',
+                'latitude': 13.784221,
+                'longitude': 121.073982,
+                'address': 'Q3MF+MPQ, Batangas City, 4200 Batangas'
             },
             {
-                'name': 'Eiffel Tower',
-                'latitude': 48.858370,
-                'longitude': 2.294481,
-                'address': 'Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France'
+                'name': 'SM Hypermarket Batangas Safe Zone',
+                'latitude': 13.792946,
+                'longitude': 121.070882,
+                'address': 'Q3RC+RFM, Along National Highway Brgy, Balagtas, Batangas City, 4200 Batangas'
             },
             {
-                'name': 'Sydney Opera House',
-                'latitude': -33.856784,
-                'longitude': 151.215297,
-                'address': 'Bennelong Point, Sydney NSW 2000, Australia'
+                'name': 'SM Batangas Safe Zone',
+                'latitude': 13.755342,
+                'longitude': 121.067414,
+                'address': 'Brgy, M.Pastor Ave, Village, Batangas City, Batangas'
+            },
+            {
+                'name': 'Batangas Capitol Safe Zone',
+                'latitude': 13.766300,
+                'longitude': 121.063074,
+                'address': 'corner Dona Aurelia, Batangas City, 4200 Batangas'
+            },
+            {
+                'name': 'SM Batangas Safe Zone',
+                'latitude': 13.755183,
+                'longitude': 121.052921,
+                'address': '12 Rizal Ave, Poblacion, Batangas City, 4200 Batangas'
+            },
+            {
+                'name': 'Batangas Oval Track Safe Zone',
+                'latitude': 13.754108,
+                'longitude': 121.050944,
+                'address': 'Q332+H96, Batangas City, Batangas'
             }
         ]
 
