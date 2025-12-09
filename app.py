@@ -21,13 +21,19 @@ if not database_url:
         "Please set DATABASE_URL to a valid PostgreSQL connection string (postgresql://...)"
     )
 
+print(f"[DEBUG] Original DATABASE_URL: {database_url[:50]}..." if len(database_url) > 50 else f"[DEBUG] Original DATABASE_URL: {database_url}")
+
 # Fix PostgreSQL URL format if needed (Render sometimes uses postgres:// instead of postgresql://)
 if database_url.startswith('postgres://'):
     database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    print("[DEBUG] Converted postgres:// to postgresql://")
 
 # Ensure psycopg2 dialect is used (remove +asyncpg if present from old configs)
 if '+asyncpg' in database_url:
     database_url = database_url.replace('+asyncpg', '')
+    print("[DEBUG] Removed +asyncpg dialect")
+
+print(f"[DEBUG] Final DATABASE_URL: {database_url[:50]}..." if len(database_url) > 50 else f"[DEBUG] Final DATABASE_URL: {database_url}")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
