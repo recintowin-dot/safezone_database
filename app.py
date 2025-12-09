@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 load_dotenv()
 
@@ -175,3 +176,34 @@ def server_error(error):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8000)), debug=os.getenv('DEBUG', 'False') == 'True')
+
+
+@app.route('/db-info', methods=['GET'])
+def db_info():
+    """Return non-sensitive info about the configured database (scheme, host, dbname)."""
+    uri = app.config.get('SQLALCHEMY_DATABASE_URI', '')
+    if not uri:
+        return jsonify({'error': 'No database configured'}), 500
+
+    parsed = urlparse(uri)
+    scheme = parsed.scheme
+    host = parsed.hostname or ''
+    port = parsed.port
+    # path may contain leading '/', strip it
+    dbname = parsed.path[1:] if parsed.path and parsed.path.startswith('/') else parsed.path
+
+    # Identify if it's sqlite (file-based) vs network DB
+    if scheme.startswith('sqlite'):
+        # show file path instead of host/dbname
+        return jsonify({
+            'backend': 'sqlite',
+            'file': parsed.path,
+            'note': 'SQLite is file-based and ephemeral on Render; use PostgreSQL for persistence.'
+        })
+
+    return jsonify({
+        'backend': scheme,
+        'host': host,
+        'port': port,
+        'database': dbname
+    })
