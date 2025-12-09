@@ -25,6 +25,10 @@ if not database_url:
 if database_url.startswith('postgres://'):
     database_url = database_url.replace('postgres://', 'postgresql://', 1)
 
+# Ensure psycopg2 dialect is used (remove +asyncpg if present from old configs)
+if '+asyncpg' in database_url:
+    database_url = database_url.replace('+asyncpg', '')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
