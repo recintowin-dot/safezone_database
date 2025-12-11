@@ -82,7 +82,7 @@ with app.app_context():
                 'address': 'corner Dona Aurelia, Batangas City, 4200 Batangas'
             },
             {
-                'name': 'SM Batangas Safe Zone',
+                'name': 'BSU Pablo Borbon Safe Zone',
                 'latitude': 13.755183,
                 'longitude': 121.052921,
                 'address': '12 Rizal Ave, Poblacion, Batangas City, 4200 Batangas'
